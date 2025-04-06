@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora BSH</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 10px;
+    }
+
+    .brand-logo {
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
+    }
+
+    .brand-logo.balay {
+      height: 75px;
+    }
+
+    .brand-logo.bosch {
+      height: 70px;
+    }
+
+    .brand-logo.siemens {
+      height: 52px;
+    }
+
+    h1 {
+      color: #00bfff;
+      font-size: 2.5em;
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .calc-icon {
+      height: 40px;
+      width: auto;
+      vertical-align: middle;
+    }
+
+    label {
+      display: block;
+      margin: 25px 0 10px;
+      font-size: 1.2em;
+    }
+
+    input[type="text"] {
+      width: 300px;
+      padding: 15px;
+      font-size: 1.3em;
+      border-radius: 10px;
+      border: none;
+      text-align: center;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #calcular {
+      background-color: #2196f3;
+      color: white;
+    }
+
+    #resultado {
+      background-color: #144a35;
+      margin-top: 25px;
+      padding: 15px;
+      font-size: 1.3em;
+      border-radius: 10px;
+      font-weight: bold;
+      display: none;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #copiar {
+      background-color: #d4af37;
+      color: white;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Logos -->
+    <div class="logos">
+      <img src="Logo_Balay.png" alt="Logo Balay" class="brand-logo balay" />
+      <img src="Logo_Bosch.png" alt="Logo Bosch" class="brand-logo bosch" />
+      <img src="Logo_Siemens.png" alt="Logo Siemens" class="brand-logo siemens" />
+    </div>
+
+    <!-- Título -->
+    <h1>
+      <img src="calculadora.png" alt="Icono calculadora" class="calc-icon" />
+      Calculadora BSH
+    </h1>
+
+    <!-- Entrada -->
+    <label for="cantidad">Introduce una cantidad en euros (ej: 1.000,50):</label>
+    <input type="text" id="cantidad" placeholder="Ej: 1000,50" onkeypress="handleKeyPress(event)" />
+
+    <!-- Botón Calcular -->
+    <button id="calcular" onclick="calcular()">Calcular</button> <select id="porcentaje" style="margin-left: 10px; padding: 10px; font-size: 1em; border-radius: 10px;">
+<option value="1">1%</option><option value="2">2%</option><option value="3" selected>3%</option><option value="4">4%</option><option value="5">5%</option><option value="6">6%</option><option value="7">7%</option><option value="8">8%</option><option value="9">9%</option><option value="10">10%</option><option value="11">11%</option><option value="12">12%</option><option value="13">13%</option><option value="14">14%</option><option value="15">15%</option><option value="16">16%</option><option value="17">17%</option><option value="18">18%</option><option value="19">19%</option><option value="20">20%</option>
+</select>
+
+    <!-- Resultado -->
+    <div id="resultado">💰 <strong>Resultado:</strong> <span id="valor"></span> €</div>
+
+    <!-- Botón Copiar -->
+    <button id="copiar" onclick="copiarResultado()">📋 Copiar resultado</button>
+  </div>
+
+  
+  <script>
+    function calcular() {
+      let input = document.getElementById("cantidad").value
+        .replace(/\./g, '')  // quitar puntos de miles
+        .replace(',', '.');  // convertir coma en punto decimal
+
+      let cantidad = parseFloat(input);
+      if (isNaN(cantidad)) {
+        alert("Por favor, introduce una cantidad válida.");
+        return;
+      }
+
+      let porcentaje = parseFloat(document.getElementById("porcentaje").value);
+      let resultado = cantidad * (1 + porcentaje / 100);
+
+      // Forzar separador de miles incluso en cifras de 4 dígitos
+      let formateado = new Intl.NumberFormat('es-ES', {
+        useGrouping: true,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(resultado);
+
+      document.getElementById("valor").innerText = formateado;
+      document.getElementById("resultado").style.display = "block";
+      document.getElementById("copiar").style.display = "inline-block";
+    }
+
+    function copiarResultado() {
+      let texto = document.getElementById("valor").innerText + " €";
+      navigator.clipboard.writeText(texto).then(() => {
+        console.log("Copiado: " + texto);
+      });
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        calcular();
+      }
+    }
+  </script>
+
+</body>
+</html>
